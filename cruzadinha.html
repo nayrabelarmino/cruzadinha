@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cruzadinha ArqComp</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container-tentativas">
+        <div class="container-input">
+            <span class="wrapper">
+                <h3>Questões:</h3>
+                <button onclick="showRules()" class="rules-button">Regras</button>
+            </span>
+            <ul id="lista-perguntas">
+
+            </ul>
+            <span class="flex-container">
+                <div class="difficulty_box">
+                    <select id="select_dificuldade">
+                        <option>Normal</option>
+                        <option>Fácil</option>
+                    </select>
+                    <button onclick="mudaDificuldade()" id="confirm-button">Confirmar</button>
+                </div>
+                <div class="verify_box">
+                    <button onclick="verify()">Verificar</button>
+                </div>
+            </span>
+        </div>
+    </div>
+    <div class="container-cruzadinha">
+    </div>
+
+    <div id="rules-container">
+        <div id="rules">
+            <h1>Regras</h1>
+            <ul>
+                <li>O tabuleiro é composto por 18 palavras que devem ser adivinhadas pelo jogador, estas podem ou não se cruzar, formando duas palavras que possuem uma letra em comum em casos em que há cruzamento.</li>
+                <li>Os espaçamentos entre as palavras são representados com um hífen (-)</li>
+                <li>Existem dois tipos de dificuldades: Fácil ou Normal, em Fácil o programa corrige se a letra que você inseriu está correta ou não, enquanto o Normal é como a cruzadinha convencional, sem auxílios como estes, apenas as perguntas.</li>
+                <li>Boa sorte e bom jogo! 😀</li>
+            </ul>
+            <button class="rules-button" onclick="hideRules()">Sair</button>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    function mudaDificuldade(){
+        sessionStorage.dificuldade = document.querySelector('#select_dificuldade').value
+        location.reload()
+        alert('Dificuldade alterada para: ' + sessionStorage.getItem('dificuldade'))    
+    }
+
+    function showRules(){
+        document.querySelector('#rules-container').style.display = 'flex'
+        for(i = 0; i <= 1; i+= .50){
+            setTimeout(
+                ()=>{
+                    document.querySelector('#rules-container').style.opacity = i
+                }, 5
+            )
+        }
+    }
+
+    function hideRules(){
+        
+        for(i = 1; i >= 0; i-= .50){
+            setTimeout(
+                ()=>{
+                    document.querySelector('#rules-container').style.opacity = i
+                }, 5
+            )
+            if(i >= 0){
+                setTimeout(()=>{
+                    document.querySelector('#rules-container').style.display = 'none'
+                }, 200)
+            }
+        }
+    }
+        
+
+    function verify(){
+        var aviso = ''
+        verificarLinhas(document.querySelectorAll('#CPU .letra'), 'CPU', 1)
+        verificarLinhas(document.querySelectorAll('#L .letra'), 'L', 2)
+        verificarLinhas(document.querySelectorAll('#REGISTRADORES .letra'), 'REGISTRADORES', 3)
+        verificarLinhas(document.querySelectorAll('#AM .letra'), 'AM', 4)
+        verificarLinhas(document.querySelectorAll('#OM .letra'), 'OM', 5)
+        verificarLinhas(document.querySelectorAll('#PRO .letra'), 'PRO', 6)
+        verificarLinhas(document.querySelectorAll('#FLASH .letra'), 'FLASH', 7)
+        verificarLinhas(document.querySelectorAll('#MEMORIA-DE-MASS .letra'), 'MEMORIA-DE-MASSA', 8)
+        verificarLinhas(document.querySelectorAll('#MA .letra'), 'MA', 9)
+        verificarLinhas(document.querySelectorAll('#CS .letra'), 'CS', 10)
+        verificarLinhas(document.querySelectorAll('#ADDRESS-BUS .letra'), 'ADDRESS-BUS', 11)
+        verificarLinhas(document.querySelectorAll('#ATA-BUS .letra'), 'ATA-BUS', 12)
+        verificarLinhas(document.querySelectorAll('[id=\'5\'] .letra'), '5', 13)
+        verificarLinhas(document.querySelectorAll('[id=\'7\'] .letra'), '7', 14)
+        verificarLinhas(document.querySelectorAll('#DUAL-CORE .letra'), 'DUAL-CORE', 15)
+        verificarLinhas(document.querySelectorAll('#QUAD-CORE .letra'), 'QUAD-CORE', 16)
+        verificarLinhas(document.querySelectorAll('#HREADS .letra'), 'HREADS', 17)
+        verificarLinhas(document.querySelectorAll('#ACHE .letra'), 'ACHE', 18)
+    }
+
+     function verificarLinhas(elementoHTML, elemento, numQuestao){
+         var juntaPalavra = '';
+         
+         console.log('PALAVRA: ' +elementoHTML)
+         for(let letras of elementoHTML){
+            juntaPalavra += letras.value
+            console.log('LETRA:' + letras)
+         }
+         if(juntaPalavra == elemento.toLowerCase()){
+            alert(`Você acertou tudo da questao ${numQuestao} `)
+         }else{
+            alert(`Você não acertou a questao ${numQuestao} ainda...`)
+         }
+         console.log(juntaPalavra)
+    }
+
+    var palavras = ['CPU', 'L', 'REGISTRADORES', 'AM', 'OM', 'PRO', 'FLASH', 'MEMORIA-DE-MASS', 'MA', 'C', 'ADDRESS-BUS', 'ATA-BUS', '5', '7', 'DUAL-CORE', 'QUAD-CORE', 'HREADS', 'ACHE']
+
+    var perguntas = ['É a parte do computador onde é feita todo o processamento de dados enviados e recebidos.', 'É um circuito digital que realiza operações logicas e aritméticas.', 'Posições de memória dentro do processador', 'É um tipo de memória volátil, usado para armazenar dados randômicos', ' É um tipo de memória que permite apenas a leitura, as suas informações são gravadas pelo fabricante uma única vez e após isso não podem ser alteradas ou apagadas, somente acessadas.', 'É um tipo de chip de memória de computador que mantém seus dados quando a energia é desligada.', ' Um chip de memória de computador que mantém informações armazenadas sem a necessidade de uma fonte de energia.', 'Tem como função armazenar grandes quantidades de informações.', 'Permite que certos dispositivos de hardware num computador acessem a memória do sistema para leitura e escrita.', 'É usada para selecionar um dos circuitos integrados dentre vários conectados ao mesmo barramento de computador.', 'Componente que especifica um endereço fisico na memoria.', 'Transmite dados entre os componentes.', 'Processador intel de 12 threads e 6 núcleos em que o turbo boost chega até uma frequência máxima de 4.3 ghz.', 'Processador intel de até 8 cores e 16 threads com uma frequência máxima de 5.1 ghz.', 'Processador com dois núcleos reais de processamento.', 'Processador com quatro nucleos reais de processamento.', 'A entidade dentro de um processo que pode ser agendado para execução', 'Área de memória onde é mantida uma cópia temporária de dados armazenados em um meio de acesso mais lento, com o objetivo de acelerar a recuperação dos dados.']
+
+    for(data of perguntas){
+        const liPalavra = document.createElement('li')
+        liPalavra.textContent = data
+        document.querySelector('#lista-perguntas').append(liPalavra)
+    }
+    
+    for(data of palavras){
+        var juntaLetra = ''
+        const spanPalavra = document.createElement('span');
+
+        spanPalavra.setAttribute('id', `${data}`)
+        spanPalavra.setAttribute('class', `linha`)
+        document.querySelector('.container-cruzadinha').appendChild(spanPalavra)
+        for(let i = 0; i <= data.length - 1; i++){
+            const spanLetra = document.createElement('input')
+            spanLetra.textContent = data[i];
+            spanLetra.setAttribute('class', 'letra');
+            spanLetra.setAttribute('id', `${data[i]}-${data}`);
+            if(sessionStorage.getItem('dificuldade') == 'Fácil'){
+                spanLetra.addEventListener('keypress',
+                (key)=>{
+                    setTimeout( ()=>{
+                        if(spanLetra.value.length > 1){
+                            spanLetra.value = spanLetra.value[0]
+                            spanLetra.style.background = '#fff'
+                        }else if(key.key.toLowerCase() != spanLetra.textContent.toLowerCase()){
+                            spanLetra.value = '';
+                            spanLetra.style.background = '#fff'
+                        }else{
+                            console.log('Nao é maior que 1 e nem é diferente de: ' + spanLetra.textContent)
+                            spanLetra.style.background = '#00ff00';
+                        }
+                    }, 200)
+                }
+                )
+            }else{
+                spanLetra.addEventListener('keypress',
+                (key)=>{
+                    setTimeout( ()=>{
+                        if(spanLetra.value.length > 1){
+                            spanLetra.value = spanLetra.value[0]
+                        }else{
+                            console.log('Nao é maior que 1 e nem é diferente de: ' + spanLetra.textContent)
+                        }
+                    }, 200)
+                }
+                )
+            }
+            spanPalavra.appendChild(spanLetra)
+            
+        }
+    }
+    setTimeout(()=>{
+        document.querySelector('#U-ADDRESS-BUS').value = 'u'
+    }, 210)
+</script>
